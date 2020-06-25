@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title> TCP Matchmaker </title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
+
+</head>
+
+
+<style>
+
+.title{
+  font-family: 'Quicksand', sans-serif;
+}
+
+h3{
+  font-size: 15px;
+  font-family: 'Quicksand', sans-serif;
+  color: #46494C
+}
+
+h4{
+  font-size:20px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.submit{
+  font-size:30px;
+  font-family: 'Quicksand', sans-serif, bold;
+  background: #c49c6c;
+  color: white;
+  width: 250px;
+  height: 100px;
+  border: 2px solid #323031;
+  border-radius: 10px;
+}
+
+.submit:hover {
+  background: #48b6fb;
+  color: black;
+  cursor: pointer;
+}
+
+.checks:hover {
+  cursor: pointer;
+}
+
+.selections select {
+  font-size:15px;
+  font-family: 'Quicksand', sans-serif;
+  background: white;
+  color: black;
+  padding:10px;
+  width: 250px;
+  height: 50px;
+  border: 2px solid #323031;
+
+  -webkit appearance: button;
+}
+
+.selections:hover select{
+  cursor: pointer;
+}
+
+.check{
+  font-size:15px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+.textbox {
+  font-size:15px;
+  font-family: 'Quicksand', sans-serif;
+  width: 65px;
+  height: 25px;
+  border: 1.75px solid #323031;
+  text-align: center;
+  border-radius: 10px;
+}
+
+
+.logo{
+  width:300px;
+}
+
+#results {
+  width: 600px;
+  height: 475px;
+  background-color: #C49C6C;
+  border-radius: 10px;
+  padding: 25px;
+  display: none;
+  border: 2px solid #323031;
+}
+
+.popuptext{
+  color: white;
+}
+
+
+
+</style>
+
+
+
+<body>
+
+    <center>
+      <h1 class = "title"> TCP Matchmaker </h1>
+
+      <img class = "logo" src = "tcp_logo.png" alt= "topcollegeprep">
+      <h4> Preferred Major </h4>
+      <h4></h4>
+
+    <div class = "selections">
+      <select id = 'userMajor'>
+        <option> STEM </option>
+        <option> Business/Economics </option>
+        <option> Humanities </option>
+      </select>
+    </div>
+
+      <h4> Location (Select at least 2)</h4>
+      <h4> </h4>
+
+      <div class = "check">
+      <input type = "checkbox" class = "checks" value = "West"> West <br>
+      <input type = "checkbox" class = "checks" value = "East"> East <br>
+      <input type = "checkbox" class = "checks" value = "Midwest"> Midwest <br>
+      <input type = "checkbox" class = "checks" value = "South"> South <br>
+      </div>
+
+      <h4> Selectivity Importance (Rank 1-5) </h4>
+      <h4> </h4>
+
+      <div class = "selections">
+        <select id = 'userSelect'>
+          <option> 1 </option>
+          <option> 2 </option>
+          <option> 3 </option>
+          <option> 4 </option>
+          <option> 5 </option>
+        </select>
+      </div>
+
+      <h4> Brand Importance (Rank 1-5) </h4>
+      <h4> </h4>
+
+      <div class = "selections">
+        <select id = 'userBrand'>
+          <option> 1 </option>
+          <option> 2 </option>
+          <option> 3 </option>
+          <option> 4 </option>
+          <option> 5 </option>
+        </select>
+      </div>
+
+      <h4> GPA </h4>
+      <h4></h4>
+      <input type = "text" id = 'userGPA' class = "textbox">
+
+      <h4> ACT or SAT </h4>
+      <h4></h4>
+      <div class = "selections">
+        <select id = 'userChoice'>
+          <option> ACT </option>
+          <option> SAT </option>
+        </select>
+      </div>
+      <h4></h4>
+      <input type = "text" id = 'userScore' class = "textbox">
+
+      <h1> </h1>
+      <h1> </h1>
+
+     <button class = "submit" onclick = "initProcess()"> Submit Filters </button>
+
+
+
+        <h4 id = "resultsh4"></h4>
+
+        <div id = "results">
+
+        <h3 class = "popuptext" id = "1reach"></h3>
+        <h3 class = "popuptext" id = "2reach"></h3>
+        <h3 class = "popuptext" id = "3reach"></h3>
+        <h3 class = "popuptext" id = "4reach"></h3> <br>
+        <h3 class = "popuptext" id = "1target"></h3>
+        <h3 class = "popuptext" id = "2target"></h3> <br>
+        <h3 class = "popuptext" id = "1safety"></h3>
+        <h3 class = "popuptext" id = "2safety"></h3> <br>
+
+    </div>
+
+    </center>
+
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+         https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.14.6/firebase-firestore.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyDoHhLgDTI9ygmBgt5WNcssfP9d9keOQ3k",
+        authDomain: "tcp-matchmaker.firebaseapp.com",
+        databaseURL: "https://tcp-matchmaker.firebaseio.com",
+        projectId: "tcp-matchmaker",
+        storageBucket: "tcp-matchmaker.appspot.com",
+        messagingSenderId: "548441858945",
+        appId: "1:548441858945:web:94af7a7eacbbe31393be80",
+        measurementId: "G-V14M1DHLMT"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+
+      const db = firebase.firestore()
+    </script>
+
+
+  <script src="app.js"></script>
+
+</body>
+</html>
